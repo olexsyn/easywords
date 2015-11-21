@@ -1,0 +1,101 @@
+#cont {
+	position: absolute;
+	top: 10%;
+	width: 700px;
+	left: 50%;				/* с помощью left и margin-left, который равен отрицательному... */
+	margin-left: -350px;    /* ... значению половины ширины блока, центрируем блок посредине экрана */
+	font-family: Arial, Verdana, Tahoma, Ubuntu;
+}
+
+#block_word {
+	width: auto;
+	padding: 10px;
+	font-size: 20pt;
+}
+
+#form {
+	width: auto;
+	padding: 10px;
+}
+
+#block_answ {
+	width: auto;
+	padding: 10px;
+	font-size: 20pt;
+}
+
+#block_left {
+	width: auto;
+	padding-bottom: 10px;
+	padding: 0 10px;
+	font-size: 12pt;
+	color: darkgray;
+	height: 42px;
+}
+
+#text_left {
+	position: relative;
+	top: 20px;
+	width: auto;
+}
+
+
+#img_left {
+	float: right;
+	width: 32px;
+	padding-top: 6px;
+}
+
+#list {
+	width: auto;
+	padding: 10px;
+	border-top: 1px solid #858585;
+	font-size: 12pt;
+}
+
+#wordlist {
+	width: auto;
+	padding: 10px;
+	border-top: 1px solid #858585;
+	font-size: 12pt;
+}
+
+#toolbar {
+	float: right;
+	padding-top: 6px;
+	top: 20px;
+	right: 20px;
+	width: 32px;
+}
+
+a {
+	color: #2B61B9;
+	text-decoration: none;
+}
+
+input {
+	font-size: 15pt;
+}
+
+small {
+	color: #505050;
+	font-size: 15pt;
+	line-height: 10px;
+	letter-spacing: 0.5px;
+}
+
+input[type="button"], input[type="checkbox"], label, img {
+	cursor: pointer;
+}
+
+label:hover {
+	color: #717171;
+}
+
+.succ {
+	color: green;
+}
+
+.err {
+	color: red;
+}

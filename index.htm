@@ -1,0 +1,34 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+<title>English Words</title>
+
+<link href="style.css" rel="stylesheet" />
+<script src="main.js"></script>
+
+</head>
+
+<body>
+
+	<div id="cont">
+		<div id="block_word">block_word</div>
+		<div id="form">
+			<form onsubmit="return false;">
+				<input id="inp_idword" type="hidden" value="" />
+				<input id="inp_answ" type="text" value="" autofocus />
+				<input id="but_ready" type="button" value="Готово" />
+				<input id="but_getword" type="button" value="Еще слово" />
+				<input id="but_help" type="button" value="Подсказка" />
+				<input id="but_next" type="button" value="Пропустить" />
+			</form>
+		</div>
+		<div id="block_answ">block_answ</div>
+		<div id="img_left"><img id="ico_list" src="img/ico_list.png" title="Списки слов" /></div>
+		<div id="block_left"><span id="text_left">осталось слов: <span id="count_left"></span></span></div>
+		<div id="toolbar"><img id="ico_checked" src="img/ico_checked.png" title="Выбрать все" /><img id="ico_none" src="img/ico_none.png" title="Сбросить все" /><img id="ico_inverse" src="img/ico_inverse.png" title="Инвертировать" /></div>
+		<div id="list"></div>
+	</div>
+
+
+</body>
+</html>
