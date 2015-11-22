@@ -1,6 +1,6 @@
 //$(document).ready(function () {
 
-	//var version = 130525;
+	//var version = 151122;
 
 	// создаем объект для HTTP запроса.
 	var xhr = new XMLHttpRequest();
@@ -21,21 +21,14 @@
 		var data = JSON.parse(xhr.responseText);
 		dict  = data.words;
 		dkeys = data.keys;
-		// console.log(data.version);
-		// console.log(dkeys.humen);
-		// console.log(dict[0].rus);
 	}
 	else
 	{
 		alert("возникли поблемы при загрузке файла");
 	}
 
-
-
 // копируем слова из словаря ( words = dict // это будет ссылка!!! )
-//var dict = dict.slice(0); // копируем массив
-var words = []; //dict.slice(0); // загружаем слова
-//var words = dict.slice(0); // копируем массив
+var words = [];    // загружаем слова
 var mistake = -1;  // не удалять слово: юзер ошибся
 var usehelp = -1;  // не удалять слово: юзер использовал помощь
 
@@ -48,30 +41,14 @@ function $(id) {
 
 window.onload = function()
 {
-	// var stor_ok = window.localStorage ? true : false;
+	printLists();  // генерируем список тем
+	toggleList();  // прячем список тем
 
-	// if (stor_ok)
-	// {
-	// 	console.log('stor_ok = ' + stor_ok);
-	// 	alert('Есть поддержка Storage!');
-	// 	localStorage.setItem('version', version);
-	// 	printLists();  // генерируем список тем
-	// 	toggleList();  // прячем список тем
-	// 	getWord();     // выбрать и отобразить слово
-	// }
-	// else
-	// {
-		// console.log('stor_ok = ' + stor_ok);
-		// alert('Нет поддержки Storage!');
-		printLists();  // генерируем список тем
-		toggleList();  // прячем список тем
-		//toggleWordList();  // прячем список слов
-		// тема по-умолчанию:
-		var def_them = 'basic';
-		addWords( def_them );
-		$('ch_' + def_them).checked = "checked";
-		getWord();     // выбрать и отобразить слово
-	// }
+	// тема по-умолчанию:
+	var def_them = 'basic';
+	addWords( def_them );
+	$('ch_' + def_them).checked = "checked";
+	getWord();     // выбрать и отобразить слово
 
 	// кнопка Готово
 	var but_ready = $("but_ready");
@@ -131,17 +108,6 @@ function toggleList()
 	toolbar.style.display = (toolbar.style.display == 'none') ? '' : 'none';
 }
 
-// // ------------------------------------------------------
-// // обработчик спена Списки слов
-// // ------------------------------------------------------
-// function toggleWordList()
-// {
-// 	// показываем/скрываем список тем
-// 	var list = $("wordlist");
-// 	list.style.display = (list.style.display == 'none') ? '' : 'none';
-
-// }
-
 // ------------------------------------------------------
 // обработчик иконки Выбрать все
 // ------------------------------------------------------
@@ -187,7 +153,7 @@ function getWord()
 		$('but_getword').style.display = 'none';
 		$('inp_idword').value = rand_id;
 		$('inp_answ').style.display = '';
-		$('block_word').innerHTML = parseRus( words[rand_id]['rus'] );
+		$('block_word').innerHTML = parseRus( words[rand_id]['trn'] );
 		$('block_answ').innerHTML = "";
 		$('count_left').innerHTML = words_length;
 		$('but_ready').style.display = '';
@@ -205,10 +171,10 @@ function getWord()
 		$('but_ready').style.display = 'none';
 		$('but_help').style.display = 'none';
 		$('but_next').style.display = 'none';
+		if ($("list").style.display == 'none') toggleList();  // открыть списки тем, если закрыты
 		$('block_word').innerHTML = "Слова закончились!";
-		$('block_answ').innerHTML = "<small>Выбери список слов, либо обнови страницу (F5), чтобы начать заново.</small>";
+		$('block_answ').innerHTML = "<small>Выбери один или несколько списков слов, чтобы продолжить.</small>";
 		$('count_left').innerHTML = "0";
-		//$('but_getword').focus();
 	}
 
 }
@@ -230,25 +196,26 @@ function parseRus(text)
 // ------------------------------------------------------
 function getAnsw()
 {
+	// скрываем список тем и кнопки, если открыты
+	if ($("list").style.display == '') toggleList();
+
 	var obj_block_answ = $('block_answ');
 	var idword = $('inp_idword').value;
 	var obj_user_answ = $('inp_answ');
-	var engWord = words[idword]['eng'];
+	var dict_word = words[idword]['wrd'];
 	var Ok = false;
 
-	if ( engWord.indexOf('|') )
+	if ( dict_word.indexOf('|') )
 	{
 
 		var pattern = /\|/g; // g - глобальный поиск - все вхождения, а не только первое.
-		var engWord = engWord.replace(pattern, " | ");
-		//console.log(engWord);
+		var dict_word = dict_word.replace(pattern, " | ");
 		// возможно несколько вариантов ответа
-		var arrWords = engWord.split(' | ');
-		var len = arrWords.length;
+		var arr_words = dict_word.split(' | ');
+		var len = arr_words.length;
 		for (var i=len; i--; )
 		{
-			//console.log(arrWords[i]);
-			if ( arrWords[i] == obj_user_answ.value )
+			if ( arr_words[i] == obj_user_answ.value )
 			{
 				Ok = true;
 				break;
@@ -258,34 +225,33 @@ function getAnsw()
 	else
 	{
 		// только один возможный ответ
-		if ( engWord == obj_user_answ.value ) Ok = true;
+		if ( dict_word == obj_user_answ.value ) Ok = true;
 	}
 
 	if ( Ok )
 	{
 		// словарное слово соответствует ответу пользователя
 		// получаем транскрипцию
-		var trans = getTrans(idword);
+		var transcr = getTrans(idword);
 
-		obj_block_answ.innerHTML = "<span class=\"succ\">Да!</span> <strong>" + engWord + "</strong> &nbsp;"
-								+ trans
-								+ link2WR( engWord ); // ссылка на wordreference.com
+		obj_block_answ.innerHTML = "<span class=\"succ\">Да!</span> <strong>" + dict_word + "</strong> &nbsp;"
+								+ transcr
+								+ link2WR( dict_word ); // ссылка на wordreference.com
 
 		// если ответ изначально был правильным mistake == -1 и != idword
-		// и юзверь не пользовался помощью usehelp == -1 и != idword
+		// и юзер не пользовался помощью usehelp == -1 и != idword
 		if ( mistake != idword && usehelp != idword)
 		{
 			// удаляем слово из массива
-			// console.log('delete word ' + words[idword]['eng']);
+			// console.log('delete word ' + words[idword]['wrd']);
 			words.splice(idword,1);
 		}
 		else
 		{
-			// юзверь либо отвечал неправильно на это слово,
+			// юзер либо отвечал неправильно на это слово,
 			// либо пользовался помощью
 			// не удаляем, но сбрасываем флаги неудалений
 			// в следующий раз удалить, если ответ будет правильным
-			// console.log('NO delete word ' + words[idword]['eng']);
 			if (mistake == idword) mistake = -1;
 			if (usehelp == idword) usehelp = -1;
 		}
@@ -313,28 +279,24 @@ function getAnsw()
 // ------------------------------------------------------
 function toHelp()
 {
-	// console.log('--- toHelp ---');
 	// получаем id слова из скрытого поля
 	var idword = $('inp_idword').value;
-	var engWord = words[idword]['eng'];
-	// console.log('idword = ' + idword);
+	var dict_word = words[idword]['wrd'];
+
 	// показываем подсказку
-	// console.log('eng = ' + words[idword]['eng']);
-	if ( engWord )
+	if ( dict_word )
 	{
-		if ( engWord.indexOf('|') )
+		if ( dict_word.indexOf('|') )
 		{
 			var pattern = /\|/g; // g - глобальный поиск - все вхождения, а не только первое.
-			var engWord = engWord.replace(pattern, " | ");
+			var dict_word = dict_word.replace(pattern, " | ");
 		}
 
-		var trans = getTrans(idword);
-		$('block_answ').innerHTML = "Ответ: <strong>" + engWord
+		var transcr = getTrans(idword);
+		$('block_answ').innerHTML = "Ответ: <strong>" + dict_word
 				+ '</strong> &nbsp;'
-				+ trans
-				+ link2WR( engWord ); // ссылка на wordreference.com
-				//+ "<br/><small>Введи слово в поле ввода,<br/>нажми клавишу <em>Enter</em> "
-				//+ "или кликни по кнопке <em>Готово</em>.</small>";
+				+ transcr
+				+ link2WR( dict_word ); // ссылка на wordreference.com
 	}
 	else
 	{
@@ -395,14 +357,14 @@ function getLists()
 // ------------------------------------------------------
 // генерирует строку ссылок на онлайн словарь
 // ------------------------------------------------------
-function link2WR( eng_word )
+function link2WR( word )
 {
 	var link = '<br /><small>(словарь: ';
 
-	if ( eng_word.indexOf(' ') )
+	if ( word.indexOf(' ') )
 	{
 		// фраза (несколько слов)
-		var dict_words = eng_word.split(' ');
+		var dict_words = word.split(' ');
 		var dwordslen = dict_words.length;
 		for (var k=0; k<dwordslen; k++ )
 		{
@@ -419,9 +381,7 @@ function link2WR( eng_word )
 	else
 	{
 		// одно слово
-		link = '<a href="http://www.wordreference.com/enru/'
-			 + eng_word
-			 + '" target="_blank">eng_word</a>';
+		link = '<a href="http://www.wordreference.com/enru/' + word + '" target="_blank">' + word + '</a>';
 	}
 
 	return link + ')</small>';
@@ -435,14 +395,12 @@ function printLists()
 {
 	var list = getLists();
 	var str = '';
-	//  keys = Object.keys(list); - поддерживается везде, кроме IE<9
 
 	for (var key in list)
 	{
 		str += '<input type="checkbox" id="ch_' + key + '" class="ch" value="' + key + '" onclick="togLI(this)" />'
 			+ '<label for="ch_' + key + '">'
 			+ dkeys[key] + '</label> - [' + list[key]+ ' сл.]<br/>';
-			//+ dkeys[key] + '</label> - [<span style="text-decoration:underline; cursor:pointer" onclick="getWordLists(\'' + key + '\')">' + list[key] + ' сл.</span>]<br/>';
 	}
 
 	$('list').innerHTML = str;
@@ -454,7 +412,7 @@ function printLists()
 // ------------------------------------------------------
 function setCheckboxes( state )
 {
-	// выбираем код дива list
+	// выбираем код div'а list
 	var checks_list = $('list');
 	// из полученного кода выбираем импуты (чекбоксы)
 	var checks = checks_list.getElementsByTagName('input');
@@ -501,7 +459,6 @@ function setCheckboxes( state )
 // ------------------------------------------------------
 function addWords( key )
 {
-	//console.log('add ------- ');
 	var dictlen = dict.length;
 	for ( var i=dictlen; i--; )
 	{
@@ -511,17 +468,12 @@ function addWords( key )
 		{
 			if ( keys[j] === key )
 			{
-				//console.log( dict[i] );
-				//words.push( dict[i] );
-				//obj_w = ;
-
-				//words.push( obj_w );
 				// добавляем только одинарный ключ
 				words.push( { 	key: key,
-								eng: dict[i]['eng'] ,
-								tra: dict[i]['tra'] ,
-								itr: dict[i]['itr'] ,
-								rus: dict[i]['rus'] } );
+								wrd: dict[i]['wrd'] ,
+								ts1: dict[i]['ts1'] ,
+								ts2: dict[i]['ts2'] ,
+								trn: dict[i]['trn'] } );
 			}
 		}
 	}
@@ -532,13 +484,11 @@ function addWords( key )
 // ------------------------------------------------------
 function remWords( key )
 {
-	//console.log('remove ------- ');
 	var wordslen = words.length;
 	for ( var i=wordslen; i--; )
 	{
 		if ( words[i]['key'] === key )
 		{
-			// console.log( words[i] );
 			words.splice(i,1);
 		}
 	}
@@ -556,9 +506,6 @@ function togLI(checkbox)
 	else                   { remWords(checkbox.value) }
 
 	getWord();
-	//words_length = words.length;
-	//$('count_left').innerHTML = words_length;
-
 }
 
 // ------------------------------------------------------
@@ -568,23 +515,23 @@ function getTrans(idword)
 {
 	var ret = '';
 
-	var itrtr = ( words[idword]['itr'] ) ? words[idword]['itr'] : '';
+	var itrtr = ( words[idword]['ts2'] ) ? words[idword]['ts2'] : '';
 	if (itrtr)
 	{
 		ret = "[" + itrtr + "] ";
 	}
 
-	var trans = ( words[idword]['tra'] ) ? words[idword]['tra'] : '';
-	if (trans)
+	var transcr = ( words[idword]['ts1'] ) ? words[idword]['ts1'] : '';
+	if (transcr)
 	{
 		// здесь изменяем написание "Р" (почти нечитаемая "r")
 		do
 		{
-			var pos = trans.indexOf('Р');
+			var pos = transcr.indexOf('Р');
 			if (pos > 0)
 			{
 				// вместо большой Р вставляем маленькую с тэгами
-				trans = trans.substring(0,pos) + "<sub><em>р</em></sub>" + trans.substring(pos+1);
+				transcr = transcr.substring(0,pos) + "<sub><em>р</em></sub>" + transcr.substring(pos+1);
 			}
 
 		} while (pos > 0);
@@ -592,11 +539,11 @@ function getTrans(idword)
 		// здесь изменяем написание "Г" (инговое окончание)
 		do
 		{
-			var pos = trans.indexOf('Г');
+			var pos = transcr.indexOf('Г');
 			if (pos > 0)
 			{
 				// вместо большой Г вставляем маленькую с тэгами
-				trans = trans.substring(0,pos) + "<sub><em>г</em></sub>" + trans.substring(pos+1);
+				transcr = transcr.substring(0,pos) + "<sub><em>г</em></sub>" + transcr.substring(pos+1);
 			}
 
 		} while (pos > 0);
@@ -604,15 +551,15 @@ function getTrans(idword)
 		// здесь изменяем написание "'" (апостроф на знак ударения)
 		do
 		{
-			var pos = trans.indexOf("'");
+			var pos = transcr.indexOf("'");
 			if (pos > 0)
 			{
-				trans = trans.substring(0,pos) + "́" + trans.substring(pos+1);
+				transcr = transcr.substring(0,pos) + "́" + transcr.substring(pos+1);
 			}
 
 		} while (pos > 0);
 
-		ret += "[" + trans + "]";
+		ret += "[" + transcr + "]";
 	}
 
 	return "<small>" + ret + "</small>";
