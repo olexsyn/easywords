@@ -1,9 +1,7 @@
 #cont {
-	position: absolute;
-	top: 10%;
+	margin: 0 auto;
 	width: 700px;
-	left: 50%;				/* с помощью left и margin-left, который равен отрицательному... */
-	margin-left: -350px;    /* ... значению половины ширины блока, центрируем блок посредине экрана */
+	padding-top: 5%;
 	font-family: Arial, Verdana, Tahoma, Ubuntu;
 }
 
@@ -98,4 +96,11 @@ label:hover {
 
 .err {
 	color: red;
+}
+
+.git {
+	position: fixed;
+	font-size: 10pt;
+	top: 10px;
+	right: 10px;
 }

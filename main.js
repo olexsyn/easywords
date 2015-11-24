@@ -1,31 +1,47 @@
 //$(document).ready(function () {
 
-	//var version = 151122;
+//var version = 151122;
 
-	// создаем объект для HTTP запроса.
-	var xhr = new XMLHttpRequest();
+/*
 
-	// настройка объекта для отправки синхронного (false) GET запроса
-	xhr.open("GET", "dictionary.json", false);
+ToDo in README.md
 
-	// отправка запроса, т.к. запрос является синхронным, то следующая строка кода
-	// выполнится только после получения ответа со стороны сервера
-	xhr.send();
+JSON:
 
-	var dict, dkeys;
+"wrd": -> foreing WoRD
+"key": -> KEYs
+"ts1": -> TranScription 1
+"ts2": -> TranScription 2
+"exm": -> EXaMples (todo)
+"trn": -> TRaNslation of word
 
-	// все ок?
-	if (xhr.status == 200)
-	{
-		// responseText - текст ответа полученного с сервера - парсим, так как это JSON
-		var data = JSON.parse(xhr.responseText);
-		dict  = data.words;
-		dkeys = data.keys;
-	}
-	else
-	{
-		alert("возникли поблемы при загрузке файла");
-	}
+*/
+
+
+// создаем объект для HTTP запроса.
+var xhr = new XMLHttpRequest();
+
+// настройка объекта для отправки синхронного (false) GET запроса
+xhr.open("GET", "dictionary.json", false);
+
+// отправка запроса, т.к. запрос является синхронным, то следующая строка кода
+// выполнится только после получения ответа со стороны сервера
+xhr.send();
+
+var dict, dkeys;
+
+// все ок?
+if (xhr.status == 200)
+{
+	// responseText - текст ответа полученного с сервера - парсим, так как это JSON
+	var data = JSON.parse(xhr.responseText);
+	dict  = data.words;
+	dkeys = data.keys;
+}
+else
+{
+	alert("возникли поблемы при загрузке файла");
+}
 
 // копируем слова из словаря ( words = dict // это будет ссылка!!! )
 var words = [];    // загружаем слова
