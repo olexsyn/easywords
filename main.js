@@ -84,9 +84,9 @@ window.onload = function()
 
 	// нажатие Enter в поле ввода
 	var inp_answ = $("inp_answ");
-	inp_answ.onkeydown = function() {
-
-		if (event.keyCode == 13)
+	inp_answ.onkeydown = function(event) {
+		var code = event.keyCode ? event.keyCode : event.which;
+		if (code === 13)
 		{
 			getAnsw();
 			return false;
