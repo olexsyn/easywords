@@ -1,27 +1,7 @@
-// создаем объект для HTTP запроса.
-var xhr = new XMLHttpRequest();
-
-// настройка объекта для отправки синхронного (false) GET запроса
-xhr.open("GET", "dictionary.json", false);
-
-// отправка запроса, т.к. запрос является синхронным, то следующая строка кода
-// выполнится только после получения ответа со стороны сервера
-xhr.send();
-
 var dict, dkeys;
 
-// все ок?
-if (xhr.status == 200)
-{
-	// responseText - текст ответа полученного с сервера - парсим, так как это JSON
-	var data = JSON.parse(xhr.responseText);
-	dict  = data.words;
-	dkeys = data.keys;
-}
-else
-{
-	alert("возникли поблемы при загрузке файла");
-}
+dict  = data.words;
+dkeys = data.keys;
 
 var words = [];    // список для слов
 var mistake = -1   // не удалять слово: пользователь ошибся
