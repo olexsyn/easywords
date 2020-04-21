@@ -46,20 +46,20 @@ window.onload = function()
 	getWord();     // выбрать и отобразить слово
 
 	// кнопка Готово
-	var but_ready = $("but_ready");
-	but_ready.onclick = getAnsw;
+	var btn_ready = $("btn_ready");
+	btn_ready.onclick = getAnsw;
 
 	// кнопка Подсказка
-	var but_help = $("but_help");
-	but_help.onclick = toHelp;
+	var btn_help = $("btn_help");
+	btn_help.onclick = toHelp;
 
 	// кнопка Пропустить
-	var but_next = $("but_next");
-	but_next.onclick = toNext;
+	var btn_next = $("btn_next");
+	btn_next.onclick = toNext;
 
 	// кнопка Еще слово
-	var but_getword = $("but_getword");
-	but_getword.onclick = getWord;
+	var btn_getword = $("btn_getword");
+	btn_getword.onclick = getWord;
 
 	// нажатие Enter в поле ввода
 	var inp_answ = $("inp_answ");
@@ -145,27 +145,27 @@ function getWord()
 		var rand_id = Math.floor( Math.random() * words_length );
 
 		$('inp_answ').value = '';
-		$('but_getword').style.display = 'none';
+		$('btn_getword').style.display = 'none';
 		$('inp_idword').value = rand_id;
 		$('inp_answ').style.display = '';
 		$('block_word').innerHTML = parseRus( words[rand_id]['trn'] );
 		$('block_answ').innerHTML = "";
 		$('count_left').innerHTML = words_length;
-		$('but_ready').style.display = '';
-		$('but_help').style.display = '';
-		$('but_next').style.display = '';
+		$('btn_ready').style.display = '';
+		$('btn_help').style.display = '';
+		$('btn_next').style.display = '';
 		$('inp_answ').focus();
 	}
 	else
 	{
 		// слов нет
 		setCheckboxes('none');
-		$('but_getword').style.display = 'none';
+		$('btn_getword').style.display = 'none';
 		$('inp_answ').value = '';
 		$('inp_answ').style.display = 'none';
-		$('but_ready').style.display = 'none';
-		$('but_help').style.display = 'none';
-		$('but_next').style.display = 'none';
+		$('btn_ready').style.display = 'none';
+		$('btn_help').style.display = 'none';
+		$('btn_next').style.display = 'none';
 		if ($("list").style.display == 'none') toggleList();  // открыть списки тем, если закрыты
 		$('block_word').innerHTML = "Слова закончились!";
 		$('block_answ').innerHTML = "<small>Выбери один или несколько списков слов, чтобы продолжить.</small>";
@@ -252,11 +252,11 @@ function getAnsw()
 		}
 
 		$('count_left').innerHTML = words.length;
-		$('but_getword').style.display = '';
-		$('but_ready').style.display = 'none';
-		$('but_help').style.display = 'none';
-		$('but_next').style.display = 'none';
-		$('but_getword').focus();
+		$('btn_getword').style.display = '';
+		$('btn_ready').style.display = 'none';
+		$('btn_help').style.display = 'none';
+		$('btn_next').style.display = 'none';
+		$('btn_getword').focus();
 	}
 	else
 	{
