@@ -155,12 +155,15 @@ function getWord()
 }
 
 // ------------------------------------------------------
-// принимает ответ пользователя и отображает ответ
+// парсим вопрошаемое слово, см. комменты в функции
 // ------------------------------------------------------
 function parseRus(text)
 {
 
-	var pattern = /\((.+?)\)/g; // g - глобальный поиск - все вхождения, а не только первое.
+	// находим круглые скобки, если есть, в них - уточнение вопроса
+	// например: маленький (l...) - значит, имеем в виду little
+	// или       маленький (s...) - значит, small
+	var pattern = /\((.+?)\)/g;  // g - все вхождения, а не только первое.
 	var result = text.replace(pattern, "<small>$&</small>");
 
 	return result;
@@ -177,6 +180,7 @@ function getAnsw()
 	var obj_block_answ = $('block_answ');
 	var idword = $('inp_idword').value;
 	var obj_user_answ = $('inp_answ');
+	var user_answ = obj_user_answ.value.toLowerCase();
 	var dict_word = words[idword]['wrd'];
 	var Ok = false;
 
@@ -190,7 +194,7 @@ function getAnsw()
 		var len = arr_words.length;
 		for (var i=len; i--; )
 		{
-			if ( arr_words[i] == obj_user_answ.value )
+			if ( arr_words[i] == user_answ )
 			{
 				Ok = true;
 				break;
@@ -200,7 +204,7 @@ function getAnsw()
 	else
 	{
 		// только один возможный ответ
-		if ( dict_word == obj_user_answ.value ) Ok = true;
+		if ( dict_word == user_answ ) Ok = true;
 	}
 
 	if ( Ok )
